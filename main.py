@@ -1,3 +1,4 @@
+
 import discord
 import asyncio
 from discord.utils import get
@@ -16,6 +17,12 @@ async def on_ready():
     print("Bot is ready")
     await bot.change_presence(status=discord.Status.online, activity=discord.Game("/help"))
                 
+
+##########################################################################
+
+# other
+
+##########################################################################
 
 
 #help menu 
@@ -40,17 +47,6 @@ async def ping(ctx):
     await ctx.send(f'My ping is {bot.latency}!')
 
 
-# clear messages
-@bot.command(pass_context=True)
-async def clear(ctx, amount=100):
-    channel = ctx.message.channel
-    messages = []
-    async for message in channel.history(limit=amount):
-              messages.append(message)
-    await channel.delete_messages(messages)
-    await ctx.send(f'{amount} Messaged deleted', delete_after = 3)
-
-
 # informations 
 @bot.command()
 async def informations(ctx):
@@ -62,8 +58,33 @@ async def informations(ctx):
     await ctx.send(embed=embed)
 
 
+
+##########################################################################
+
+# MODERATION 
+
+##########################################################################
+
+
+
+# clear messages
+@bot.command(pass_context=True)
+@commands.has_role("moderation")
+async def clear(ctx, amount=100):
+    channel = ctx.message.channel
+    messages = []
+    if amount == 0: 
+        amount = all
+    async for message in channel.history(limit=amount):
+              messages.append(message)
+    await channel.delete_messages(messages)
+    await ctx.send(f'{amount} Messaged deleted', delete_after = 3)
+
+
+
 # kick 
 @bot.command()
+@commands.has_permissions(kick_members=True)
 async def kick(ctx, member : discord.Member, *,reason=None):
     await ctx.send(f'{member} is kick for {reason}')
     await member.send(f'you have kick for {reason}', delete_after = 3)
@@ -72,6 +93,7 @@ async def kick(ctx, member : discord.Member, *,reason=None):
     
 #ban 
 @bot.command()
+@commands.has_permissions(ban_members=True)
 async def ban(ctx, member : discord.Member, *,reason=None):
     await ctx.send(f'{member.mention} is ban for {reason}', delete_after = 3)
     await member.send(f'you have ban for {reason}')
@@ -80,6 +102,7 @@ async def ban(ctx, member : discord.Member, *,reason=None):
 
 # unban
 @bot.command()
+@commands.has_permissions(ban_members=True)
 async def unban(ctx, *,member):
     banned_users = await ctx.guild.bans()
     member_name, member_discriminator = member.split('#')
@@ -95,8 +118,20 @@ async def unban(ctx, *,member):
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 # when the bot starting
 print("bot is starting..")
 
-# token
-bot.run("Your token here")
+# connect to server
+bot.run("")

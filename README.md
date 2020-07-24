@@ -1,6 +1,6 @@
 # Jerry bot
 
-Jerry is a multifonction bot in python. The bot doesn't use Cogs fonction.
+Jerry is a multifonction bot in python. The bot doesn't use Cogs function.
 
 ``` préfix : " / " ```
 
